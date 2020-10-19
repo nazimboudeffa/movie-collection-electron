@@ -13,3 +13,4 @@ npm start
 
 ## Resources
 
+Open Movie Database
