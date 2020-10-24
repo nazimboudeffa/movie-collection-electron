@@ -1,30 +1,59 @@
 const axios = require("axios");
+const fs = require('fs');
 
 $(document).ready(() => {
+
   $('#headerDisplay').hide();
+
   $('#searchForm').on('submit', (e) => {
       let searchText = $('#searchText').val();
       getMovies(searchText);
       e.preventDefault();
 
   });
-  /*
-  let output=``;
-  output += `
-    <div class="col-md-4">
-      <div class="thumbnail">
-        <a href="#">
-          <img src="assets/MV5BZWU2OGFkM2UtNTdiYS00MjA0LWI4Y2EtM2IyZGQyZjI4ZWEyXkEyXkFqcGdeQXVyMDI3OTIzOA@@._V1_SX300.jpg" alt="Nature" style="width:100%">
-          <div class="caption">
-            <p>Lorem ipsum donec id elit non mi porta gravida at eget metus.</p>
-          </div>
-        </a>
-      </div>
-    </div>
-  `;
-  $('#movies').html(output);
-  getMovies("pulp fiction");
-  */
+
+  $('input[type=file]').change(function () {
+    var folder = this.files[0].path;
+    let apiKey = 'thewdb';
+    var titles = [];
+    var movies = [];
+
+    var files = fs.readdirSync(folder);
+
+    files.forEach(file => {
+      let fileStat = fs.statSync(folder + '/' + file).isDirectory();
+      if(!fileStat) {
+        titles.push(file.split('.').shift());
+      }
+    });
+
+    var ps = [];
+    let output=``;
+    titles.forEach(title => {
+      ps.push(axios.get(`http://www.omdbapi.com?s=${title}&apikey=${apiKey}`))
+    });
+    Promise.all(ps).then((results)=>{
+      results.forEach(result => {
+        if (!(result.data['Search'] == undefined)){
+          let movie = result.data.Search[0];
+          let image = movie.Poster;
+          output += `
+              <div class="col-md-4">
+                <div class="thumbnail">
+                  <a onclick="movieSelected('${movie.imdbID}')" href="#">
+                    <img src="${image}" alt="Lights" style="width:100%">
+                    <div class="caption">
+                      <p>${movie.Title}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+          `;
+        }
+      })
+    }).finally(()=>{$('#movies').html(output);});
+  });
+  
 });
 
 function getMovies(searchText){

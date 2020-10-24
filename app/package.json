@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "axios": "^0.21.0",
+    "fs": "0.0.1-security",
     "jquery": "^3.5.1"
   }
 }
