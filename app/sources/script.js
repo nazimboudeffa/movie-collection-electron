@@ -6,13 +6,13 @@ $(document).ready(() => {
   $('#headerDisplay').hide();
 
   $('#searchForm').on('submit', (e) => {
-      let searchText = $('#searchText').val();
-      getMovies(searchText);
-      e.preventDefault();
+    let searchText = $('#searchText').val();
+    getMovies(searchText);
+    e.preventDefault();
 
   });
 
-  $('input[type=file]').change(function () {
+  $('input[type=file]').change(function() {
     var folder = this.files[0].path;
     let apiKey = 'thewdb';
     var titles = [];
@@ -22,19 +22,19 @@ $(document).ready(() => {
 
     files.forEach(file => {
       let fileStat = fs.statSync(folder + '/' + file).isDirectory();
-      if(!fileStat) {
+      if (!fileStat) {
         titles.push(file.split('.').shift());
       }
     });
 
     var ps = [];
-    let output=``;
+    let output = ``;
     titles.forEach(title => {
       ps.push(axios.get(`http://www.omdbapi.com?s=${title}&apikey=${apiKey}`))
     });
-    Promise.all(ps).then((results)=>{
+    Promise.all(ps).then((results) => {
       results.forEach(result => {
-        if (!(result.data['Search'] == undefined)){
+        if (!(result.data['Search'] == undefined)) {
           let movie = result.data.Search[0];
           let image = movie.Poster;
           output += `
@@ -51,32 +51,34 @@ $(document).ready(() => {
           `;
         }
       })
-    }).finally(()=>{$('#movies').html(output);});
+    }).finally(() => {
+      $('#movies').html(output);
+    });
   });
-  
+
 });
 
-function getMovies(searchText){
-    //Get and show data for all movies using omdbapi.com for a search query
-    let apiKey = 'thewdb';
-    let x = `http://www.omdbapi.com?s=${searchText}&apikey=${apiKey}`;
-    axios.get(`http://www.omdbapi.com?s=${searchText}&apikey=${apiKey}`)
-        .then((response) => {
-            if (response.data.Response == "False"){
-                $('#headerDisplay').hide();
-                let output = `<h3>No Movies/TV Shows found!</h3>`
-                $('#movies').html(output);
-            } else {
-            $('#headerDisplay').show();
-            let movies = response.data.Search;
-            let output=``;
-            $.each(movies, (index, movie) => {
-                let image;
-                if (movie.Poster !== "N/A")
-                    image = movie.Poster;
-                else
-                    image = "https://thumb.ibb.co/kJgmxz/default_IMG.png";
-                output += `
+function getMovies(searchText) {
+  //Get and show data for all movies using omdbapi.com for a search query
+  let apiKey = 'thewdb';
+  let x = `http://www.omdbapi.com?s=${searchText}&apikey=${apiKey}`;
+  axios.get(`http://www.omdbapi.com?s=${searchText}&apikey=${apiKey}`)
+    .then((response) => {
+      if (response.data.Response == "False") {
+        $('#headerDisplay').hide();
+        let output = `<h3>No Movies/TV Shows found!</h3>`
+        $('#movies').html(output);
+      } else {
+        $('#headerDisplay').show();
+        let movies = response.data.Search;
+        let output = ``;
+        $.each(movies, (index, movie) => {
+          let image;
+          if (movie.Poster !== "N/A")
+            image = movie.Poster;
+          else
+            image = "https://thumb.ibb.co/kJgmxz/default_IMG.png";
+          output += `
                     <div class="col-md-4">
                       <div class="thumbnail">
                         <a onclick="movieSelected('${movie.imdbID}')" href="#">
@@ -88,33 +90,33 @@ function getMovies(searchText){
                       </div>
                     </div>
                 `;
-            });
-
-            //transforms the output to html
-            $('#movies').html(output);
-        }
-
-        })
-        .catch((err) => {
-            console.log(err);
         });
+
+        //transforms the output to html
+        $('#movies').html(output);
+      }
+
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
-function movieSelected(id){
-    //Sets location to the movie page and stores the id in the session
-    sessionStorage.setItem('movieId', id);
-    window.location = 'movie.html';
-    return false;
+function movieSelected(id) {
+  //Sets location to the movie page and stores the id in the session
+  sessionStorage.setItem('movieId', id);
+  window.location = 'movie.html';
+  return false;
 }
 
-function getMovie(){
-    //Get and show data for an individual movie using omdbapi.com
-    let movieId = sessionStorage.getItem('movieId');
-    let apiKey = 'thewdb';
-    axios.get(`http://www.omdbapi.com?i=${movieId}&apikey=${apiKey}`)
+function getMovie() {
+  //Get and show data for an individual movie using omdbapi.com
+  let movieId = sessionStorage.getItem('movieId');
+  let apiKey = 'thewdb';
+  axios.get(`http://www.omdbapi.com?i=${movieId}&apikey=${apiKey}`)
     .then((response) => {
-        let movie = response.data;
-        let output = `
+      let movie = response.data;
+      let output = `
             <div class="row">
                 <div class="col-md-4">
                     <img src="${movie.Poster}" class="thumbnail">
@@ -146,11 +148,11 @@ function getMovie(){
             </div>
         `;
 
-        $('#movie').html(output);
+      $('#movie').html(output);
 
     })
     .catch((err) => {
-        console.log(err);
+      console.log(err);
     });
 
 

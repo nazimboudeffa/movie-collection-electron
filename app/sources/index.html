@@ -2,7 +2,9 @@
 <html>
 
 <head>
-  <script>window.$ = window.jQuery = require('jquery');</script>
+  <script>
+    window.$ = window.jQuery = require('jquery');
+  </script>
   <link rel="stylesheet" href="libs/bootstrap-3.4.1-dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="style.css" />
   <script src="libs/bootstrap-3.4.1-dist/js/bootstrap.min.js"></script>
@@ -11,15 +13,12 @@
 
 <body>
   <div class="jumbotron">
-        <h3 class="text-center">Search a Movie/TV Show</h3>
-        <form id="searchForm">
-            <input type="text" class="form-control" id="searchText" placeholder="Search a Movie/TV Show">
-        </form>
-        <input
-            type="file"
-            webkitdirectory="true"
-        />
-    </div>
+    <h3 class="text-center">Search a Movie/TV Show</h3>
+    <form id="searchForm">
+      <input type="text" class="form-control" id="searchText" placeholder="Search a Movie/TV Show">
+    </form>
+    <input type="file" webkitdirectory="true" />
+  </div>
   </div>
 
   <h3 id="headerDisplay" class="text-left">Click on a Movie/TV Show</h3>
