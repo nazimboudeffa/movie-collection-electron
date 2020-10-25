@@ -1,4 +1,9 @@
-const { app, BrowserWindow, webFrame, Menu } = require('electron')
+const {
+  app,
+  BrowserWindow,
+  webFrame,
+  Menu
+} = require('electron')
 const path = require('path')
 const url = require('url')
 const shell = require('electron').shell
@@ -13,13 +18,21 @@ app.on('ready', () => {
     height: 600,
     minWidth: 640,
     minHeight: 360,
-    backgroundColor: '#000',
-    icon: path.join(__dirname, { darwin: 'icon.icns', linux: 'icon.png', win32: 'icon.ico' }[process.platform] || 'icon.ico'),
+    backgroundColor: '#eee',
+    icon: path.join(__dirname, {
+      darwin: 'icon.icns',
+      linux: 'icon.png',
+      win32: 'icon.ico'
+    } [process.platform] || 'icon.ico'),
     resizable: true,
     frame: (process.argv.indexOf('frameless') == -1) && (process.platform !== 'darwin'),
     skipTaskbar: process.platform === 'darwin',
     autoHideMenuBar: process.platform === 'darwin',
-    webPreferences: { zoomFactor: 1.0, nodeIntegration: true, backgroundThrottling: false }
+    webPreferences: {
+      zoomFactor: 1.0,
+      nodeIntegration: true,
+      backgroundThrottling: false
+    }
   })
 
   app.win.loadURL(`file://${__dirname}/sources/index.html`)
@@ -30,11 +43,11 @@ app.on('ready', () => {
     app.quit()
   })
 
-  app.win.on('hide', function () {
+  app.win.on('hide', function() {
     isShown = false
   })
 
-  app.win.on('show', function () {
+  app.win.on('show', function() {
     isShown = true
   })
 
@@ -51,23 +64,31 @@ app.on('ready', () => {
   })
 })
 
-app.inspect = function () {
+app.inspect = function() {
   app.win.toggleDevTools()
 }
 
-app.toggleFullscreen = function () {
+app.toggleFullscreen = function() {
   app.win.setFullScreen(!app.win.isFullScreen())
 }
 
-app.toggleVisible = function () {
+app.toggleVisible = function() {
   if (process.platform === 'darwin') {
-    if (isShown && !app.win.isFullScreen()) { app.win.hide() } else { app.win.show() }
+    if (isShown && !app.win.isFullScreen()) {
+      app.win.hide()
+    } else {
+      app.win.show()
+    }
   } else {
-    if (!app.win.isMinimized()) { app.win.minimize() } else { app.win.restore() }
+    if (!app.win.isMinimized()) {
+      app.win.minimize()
+    } else {
+      app.win.restore()
+    }
   }
 }
 
-app.injectMenu = function (menu) {
+app.injectMenu = function(menu) {
   try {
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
   } catch (err) {
